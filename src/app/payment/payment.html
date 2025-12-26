@@ -1,0 +1,205 @@
+<section class="bg-white py-8 antialiased md:py-16">
+    <div class="mx-auto max-w-screen-xl px-4 2xl:px-0">
+        <div class="mx-auto max-w-5xl">
+            <h2 class="text-xl font-semibold text-gray-900 sm:text-2xl mb-6">Datos de pago</h2>
+        </div>
+
+        <ol class="items-center w-full space-y-4 sm:flex sm:space-x-8 sm:space-y-0 rtl:space-x-reverse">
+            <li class="flex items-center text-blue-600 space-x-2.5 rtl:space-x-reverse">
+                <span class="flex items-center justify-center w-8 h-8 border border-blue-600 rounded-full shrink-0">
+                    1
+                </span>
+                <span>
+                    <h3 class="font-medium leading-tight">Datos del usuario</h3>
+                </span>
+            </li>
+            <li class="flex items-center text-gray-500 space-x-2.5 rtl:space-x-reverse">
+                <span class="flex items-center justify-center w-8 h-8 border border-gray-500 rounded-full shrink-0">
+                    2
+                </span>
+                <span>
+                    <h3 class="font-medium leading-tight">Datos de envío</h3>
+                </span>
+            </li>
+            <li class="flex items-center text-gray-500 space-x-2.5 rtl:space-x-reverse">
+                <span class="flex items-center justify-center w-8 h-8 border border-gray-500 rounded-full shrink-0">
+                    3
+                </span>
+                <span>
+                    <h3 class="font-medium leading-tight">Pago</h3>
+                </span>
+            </li>
+        </ol>
+
+        <div class="mt-6 sm:mt-8 lg:flex lg:items-start lg:gap-12">
+            <form #formPago="ngForm"
+                class="w-full rounded-lg border border-gray-200 bg-white p-4 shadow-sm sm:p-6 lg:max-w-xl lg:p-8">
+                <div class="mb-6 grid grid-cols-2 gap-4">
+                    <div class="col-span-2 sm:col-span-1">
+                        <label for="nombre" class="mb-2 block text-sm font-medium text-gray-900">Nombre*</label>
+                        <input type="text" name="nombre" id="nombre" required ngModel #nombre="ngModel"
+                            class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500">
+
+                        <p *ngIf="nombre.invalid && nombre.touched" class="text-red-500 text-xs mt-1">
+                            Este campo es obligatorio
+                        </p>
+                    </div>
+
+                    <div class="col-span-2  sm:col-span-1">
+                        <label for="apellidos" class="mb-2 block text-sm font-medium text-gray-900">
+                            Apellidos*
+                        </label>
+                        <input type="text" name="apellidos" id="apellidos" required ngModel #apellidos="ngModel"
+                            class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 pe-10 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500">
+
+                        <p *ngIf="apellidos.invalid && apellidos.touched" class="text-red-500 text-xs mt-1">
+                            Este campo es obligatorio
+                        </p>
+                    </div>
+
+                    <div class="col-span-2">
+                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Correo*</label>
+                        <input type="email" id="email" name="email" required ngModel #email="ngModel"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                        <p *ngIf="email.invalid && email.touched" class="text-red-500 text-xs mt-1">
+                            Este campo es obligatorio
+                        </p>
+                    </div>
+
+                    <div>
+                        <label for="pais" class="block mb-2 text-sm font-medium text-gray-900">País*</label>
+                        <select id="pais" [(ngModel)]="valorPaisSelec" name="pais" (change)="onCambiarPais($event)"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            <option value="" selected>Seleccione</option>
+                            <option *ngFor="let pais of paises" [value]="pais.value">{{ pais.label }}</option>
+                        </select>
+                        <p *ngIf="!valorPaisSelec" class="text-red-500 text-xs mt-1">
+                            Este campo es obligatorio
+                        </p>
+                    </div>
+
+                    @if (valorPaisSelec) {
+                    <div>
+                        <label for="region" class="block mb-2 text-sm font-medium text-gray-900">Región*</label>
+                        <select id="region" [(ngModel)]="valorRegionSelec" name="region"
+                            (change)="onCambiarRegion($event)" [disabled]="!valorPaisSelec"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            <option value="" selected>Seleccione</option>
+                            <option *ngFor="let region of regionesFiltradas" [value]="region.value">{{ region.label
+                                }}</option>
+                        </select>
+                        <p *ngIf="!valorRegionSelec" class="text-red-500 text-xs mt-1">
+                            Este campo es obligatorio
+                        </p>
+                    </div>
+                    }
+
+                    @if (valorRegionSelec) {
+                    <div>
+                        <label for="ciudad" class="block mb-2 text-sm font-medium text-gray-900">Ciudad*</label>
+                        <select id="ciudad" [(ngModel)]="valorCiudadSelec" name="ciudad" [disabled]="!valorRegionSelec"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            <option value="" selected>Seleccione</option>
+                            <option *ngFor="let ciudad of ciudadesFiltradas" [value]="ciudad.value">{{ ciudad.label
+                                }}</option>
+                        </select>
+                        <p *ngIf="!valorCiudadSelec" class="text-red-500 text-xs mt-1">
+                            Este campo es obligatorio
+                        </p>
+                    </div>
+                    }
+
+                    <div></div>
+                    <div class="col-span-2">
+                        <label for="telefono" class="block mb-2 text-sm font-medium text-gray-900">Teléfono*</label>
+                        <div class="flex items-center">
+                            <button type="button" (click)="toggleDropdown()"
+                                class="shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100">
+                                <span class="inline-flex items-center">
+                                    <img [src]="paisSeleccionado.flag" alt="{{ paisSeleccionado.label }}"
+                                        class="w-5 h-5 me-2" />
+                                    {{ paisSeleccionado.code }}
+                                </span>
+                                <svg class="w-2.5 h-2.5 ms-2.5" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 10 6">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2" d="m1 1 4 4 4-4" />
+                                </svg>
+                            </button>
+                            @if (dropdownOpen) {
+                            <div class="absolute z-10 mt-2 w-48 bg-white divide-y divide-gray-100 rounded-lg shadow-lg">
+                                <ul class="py-2 text-sm text-gray-700">
+                                    @for (option of paisesCodigos; track option) {
+                                    <li>
+                                        <button type="button" (click)="seleccionarPais(option)"
+                                            class="inline-flex w-full px-4 py-2 items-center hover:bg-gray-100">
+                                            <img [src]="option.flag" alt="{{ option.label }}" class="w-5 h-5 me-2" />
+                                            {{ option.label }}
+                                        </button>
+                                    </li>
+                                    }
+                                </ul>
+                            </div>
+                            }
+                            <div class="relative w-full">
+                                <input type="text" id="telefono" name="telefono" required ngModel #telefono="ngModel"
+                                    class="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-e-lg border-s-0 border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                                    pattern="^[0-9]{7,10}$" />
+                            </div>
+                        </div>
+                        <p *ngIf="telefono.invalid && telefono.touched" class="text-red-500 text-xs mt-1">
+                            Este campo es obligatorio
+                        </p>
+                    </div>
+
+                    <div class="col-span-2">
+                        <label for="direccion" class="mb-2 block text-sm font-medium text-gray-900">
+                            Dirección* </label>
+                        <input type="text" id="direccion" name="direccion" required ngModel #direccion="ngModel"
+                            class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500" />
+                        <p *ngIf="direccion.invalid && direccion.touched" class="text-red-500 text-xs mt-1">
+                            Este campo es obligatorio
+                        </p>
+                    </div>
+
+                    <div class="col-span-2">
+                        <label for="complemento-direccion" class="mb-2 block text-sm font-medium text-gray-900">
+                            Apartamento, torre o casa (opcional) </label>
+                        <input type="text" id="complemento-direccion"
+                            class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500" />
+                    </div>
+                </div>
+
+                <button type="submit"
+                    class="flex w-full items-center justify-center rounded-lg bg-green-500 px-5 py-2.5 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-4  focus:ring-primary-300">Cotizar
+                    envío</button>
+            </form>
+
+            <div class="mt-6 grow sm:mt-8 lg:mt-0">
+                <div class="space-y-4 rounded-lg border border-gray-100 bg-gray-50 p-6">
+                    <div class="space-y-2">
+                        <dl class="flex items-center justify-between gap-4">
+                            <dt class="text-base font-normal text-gray-500">Precio de los
+                                productos</dt>
+                            <dd class="text-base font-medium text-gray-900">{{ cartState.precio() |
+                                currency }}</dd>
+                        </dl>
+
+                        <dl class="flex items-center justify-between gap-4">
+                            <dt class="text-base font-normal text-gray-500">Envío</dt>
+                            <dd class="text-base font-medium text-gray-900">$99</dd>
+                        </dl>
+                    </div>
+
+                    <dl class="flex items-center justify-between gap-4 border-t border-gray-200 pt-2">
+                        <dt class="text-base font-bold text-gray-900">Total</dt>
+                        <dd class="text-base font-bold text-gray-900">{{ cartState.precio() |
+                            currency }}</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/datepicker.min.js"></script>

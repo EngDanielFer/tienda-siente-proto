@@ -1,0 +1,110 @@
+<nav class="bg-green-siente mb-8 fixed w-full z-40">
+    <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+        <div class="flex items-center space-x-3">
+            <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
+                <img src="../../../../assets/images/siente_logo.png" class="h-7" alt="Siente Logo" />
+            </a>
+        </div>
+        <div class="flex items-center space-x-6">
+            <div class="hidden md:block bg-transparent" id="navbar-dropdown">
+                <ul
+                    class="flex flex-col font-medium p-4 md:p-0 mt-4 border border-default rounded-base bg-neutral-secondary-soft md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-neutral-primary">
+                    <li>
+                        <a routerLink="/" routerLinkActive="text-yellow-siente"
+                            [routerLinkActiveOptions]="{ exact: true }"
+                            class="block py-2 px-3 text-heading text-white hover:text-yellow-siente bg-brand rounded md:bg-transparent md:text-fg-brand md:p-0"
+                            aria-current="page">Inicio</a>
+                    </li>
+                    <!-- <li>
+                        <button id="dropdownNvbarButton" data-dropdown-toggle="dropdownNavbar"
+                            class="flex items-center justify-between text-white hover:text-yellow-siente w-full py-2 px-3 rounded font-medium text-heading md:w-auto hover:bg-neutral-tertiary md:hover:bg-transparent md:border-0 md:hover:text-fg-brand md:p-0">
+                            Dropdown
+                            <svg class="w-4 h-4 ms-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2" d="m19 9-7 7-7-7" />
+                            </svg>
+                        </button> -->
+                    <!-- Dropdown menu -->
+                    <!-- <div id="dropdownNavbar"
+                            class="z-10 hidden bg-neutral-primary-medium border border-default-medium rounded-base shadow-lg w-44">
+                            <ul class="p-2 text-sm text-body text-white font-medium"
+                                aria-labelledby="dropdownNvbarButton">
+                                <li>
+                                    <a href="#"
+                                        class="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded">Dashboard</a>
+                                </li>
+                                <li>
+                                    <a href="#"
+                                        class="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded">Settings</a>
+                                </li>
+                                <li>
+                                    <a href="#"
+                                        class="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded">Earnings</a>
+                                </li>
+                                <li>
+                                    <a href="#"
+                                        class="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded">Sign
+                                        out</a>
+                                </li>
+                            </ul>
+                        </div> -->
+                    <!-- </li> -->
+                    <li>
+                        <a routerLink="/sobre-nosotros" routerLinkActive="text-yellow-siente"
+                            class="block py-2 px-3 text-heading text-white hover:text-yellow-siente rounded hover:bg-neutral-tertiary md:hover:bg-transparent md:border-0 md:hover:text-fg-brand md:p-0 md:dark:hover:bg-transparent">Nosotros</a>
+                    </li>
+                    <li>
+                        <a routerLink="/productos" routerLinkActive="text-yellow-siente"
+                            class="block py-2 px-3 text-heading text-white hover:text-yellow-siente rounded hover:bg-neutral-tertiary md:hover:bg-transparent md:border-0 md:hover:text-fg-brand md:p-0 md:dark:hover:bg-transparent">Productos</a>
+                    </li>
+                </ul>
+            </div>
+            <button type="button" (click)="toggleMenu()"
+                class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                aria-controls="navbar-default" aria-expanded="false">
+                <span class="sr-only">Menú</span>
+                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 17 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M1 1h15M1 7h15M1 13h15" />
+                </svg>
+            </button>
+
+            <button class="relative text-white hover:text-yellow-siente" (click)="openCartDrawer()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"
+                    class="icon icon-tabler icons-tabler-filled icon-tabler-shopping-cart">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path
+                        d="M6 2a1 1 0 0 1 .993 .883l.007 .117v1.068l13.071 .935a1 1 0 0 1 .929 1.024l-.01 .114l-1 7a1 1 0 0 1 -.877 .853l-.113 .006h-12v2h10a3 3 0 1 1 -2.995 3.176l-.005 -.176l.005 -.176c.017 -.288 .074 -.564 .166 -.824h-5.342a3 3 0 1 1 -5.824 1.176l-.005 -.176l.005 -.176a3.002 3.002 0 0 1 1.995 -2.654v-12.17h-1a1 1 0 0 1 -.993 -.883l-.007 -.117a1 1 0 0 1 .883 -.993l.117 -.007h2zm0 16a1 1 0 1 0 0 2a1 1 0 0 0 0 -2zm11 0a1 1 0 1 0 0 2a1 1 0 0 0 0 -2z" />
+                </svg>
+                @if (cartState.cantidad() > 0) {
+                <span class="absolute bg-green-600 size-6 rounded-full flex items-center justify-center -right-2">
+                    {{ cartState.cantidad() }}
+                </span>
+                }
+            </button>
+        </div>
+    </div>
+    <div [class.hidden]="!isMenuOpen()"
+        class="w-full md:hidden md:w-auto bg-green-siente md:bg-transparent border-t border-sky-600 md:border-0 transition-all duration-300 ease-in-out"
+        id="navbar-default" [class.opacity-0]="!isMenuOpen()" [class.opacity-100]="isMenuOpen()">
+        <ul
+            class="font-medium flex flex-col p-4 md:p-0 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0">
+            <li>
+                <a routerLink="/" routerLinkActive="text-yellow-siente" [routerLinkActiveOptions]="{ exact: true }"
+                    class="block py-2 px-3 text-heading text-white hover:text-yellow-siente bg-brand rounded md:bg-transparent md:text-fg-brand md:p-0"
+                    aria-current="page">Inicio</a>
+            </li>
+            <li>
+                <a routerLink="/sobre-nosotros" routerLinkActive="text-yellow-siente"
+                    class="block py-2 px-3 text-heading text-white hover:text-yellow-siente rounded hover:bg-neutral-tertiary md:hover:bg-transparent md:border-0 md:hover:text-fg-brand md:p-0 md:dark:hover:bg-transparent">Nosotros</a>
+            </li>
+            <li>
+                <a routerLink="/productos" routerLinkActive="text-yellow-siente"
+                    class="block py-2 px-3 text-heading text-white hover:text-yellow-siente rounded hover:bg-neutral-tertiary md:hover:bg-transparent md:border-0 md:hover:text-fg-brand md:p-0 md:dark:hover:bg-transparent">Productos</a>
+            </li>
+        </ul>
+
+    </div>
+</nav>

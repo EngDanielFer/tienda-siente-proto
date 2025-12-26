@@ -1,0 +1,49 @@
+<div class="flex items-start gap-4 rounded-lg border-b border-gray-200 bg-white p-4 shadow-sm md:p-6 mt-5">
+    <div class="shrink-0 md:order-1">
+        <img [src]="imagenSrc()" alt="imac image" class="w-16 h-16 object-contain rounded-md border border-gray-200">
+    </div>
+
+    <div class="flex-1 min-w-0">
+        <p class="text-sm font-medium text-gray-900 truncate">
+            {{ productoCartItem().producto.nombre_producto }}
+        </p>
+
+        <p class="text-sm text-gray-500">
+            {{ productoCartItem().producto.precio_por_mayor | currency}}
+        </p>
+
+        <div class="flex items-center mt-2">
+            <button type="button" id="decrement-button" data-input-counter-decrement="counter-input"
+                class="inline-flex h-6 w-6 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 disabled:opacity-50"
+                (click)="onDecrease.emit(productoCartItem())" [disabled]="productoCartItem().cantidad === 1">
+                <svg class="h-2.5 w-2.5 text-gray-900" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 18 2">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M1 1h16" />
+                </svg>
+            </button>
+            <input type="text" id="counter-input" data-input-counter
+                class="w-8 mx-2 border-0 bg-transparent text-center text-sm font-medium text-gray-900 focus:outline-none focus:ring-0"
+                [value]="productoCartItem().cantidad" disabled required>
+            <button type="button" id="increment-button" data-input-counter-increment="counter-input"
+                class="inline-flex h-6 w-6 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100"
+                (click)="onIncrease.emit(productoCartItem())">
+                <svg class="h-2.5 w-2.5 text-gray-900" aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 1v16M1 9h16" />
+                </svg>
+            </button>
+        </div>
+
+        <button type="button"
+            class="mt-2 inline-flex items-center text-xs font-medium text-red-600 hover:underline"
+            (click)="onRemove.emit(productoCartItem().producto.id)">
+            <svg class="me-1.5 h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M6 18 17.94 6M18 18 6.06 6" />
+            </svg> Eliminar
+        </button>
+    </div>
+</div>

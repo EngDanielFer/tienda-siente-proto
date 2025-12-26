@@ -1,0 +1,54 @@
+<section class="antialiased h-full w-full flex flex-col rounded-lg">
+    <div class="flex flex-col mx-5 max-w-screen-xl px-4 2xl:px-0">
+        @switch (cartState.status()) {
+        @case ('empty') {
+        <div class="p-4 mb-4 items-center text-center text-sm text-red-800 rounded-lg bg-red-50 mt-5" role="alert">
+            <span class="font-medium">No hay productos en el carrito</span>
+        </div>
+        }
+        @case('withProducts') {
+        <div class="flex flex-col">
+            <div class="flex-1 overflow-y-auto pr-2 space-y-4 min-h-0">
+                @for (cartItem of cartState.productos(); track cartItem.producto.id) {
+                <app-cart-item [productoCartItem]="cartItem" (onRemove)="onRemove($event)"
+                    (onIncrease)="onIncrease($event)" (onDecrease)="onDecrease($event)"></app-cart-item>
+                }
+            </div>
+
+            <div class="flex-shrink-0 mt-4 mb-6 border-t border-gray-200 pt-4 bg-white p-3 rounded-lg shadow-sm">
+                <p class="text-base font-semibold text-gray-900 mb-2">Pedido</p>
+
+                <dl class="flex items-center justify-between text-sm mb-1">
+                    <dt class="text-base font-normal text-gray-500">Subtotal</dt>
+                    <dd class="text-base font-medium text-gray-900">
+                        {{ cartState.precio() | currency }}
+                    </dd>
+                </dl>
+
+                <dl class="flex items-center justify-between gap-4 border-t border-gray-200 pt-2 mt-2">
+                    <dt class="text-base font-bold text-gray-900">Total</dt>
+                    <dd class="text-base font-bold text-gray-900">
+                        {{ cartState.precio() | currency }}
+                    </dd>
+                </dl>
+
+                <button type="button" (click)="goToPayment()"
+                    class="flex w-full mt-4 items-center justify-center rounded-lg bg-green-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-primary-300">
+                    Ir al pago
+                </button>
+
+                <button type="button" (click)="goToProducts()"
+                    class="inline-flex w-full mt-2 text-sm font-medium text-primary-700 underline hover:underline cursor-pointer">
+                    Seguir Comprando
+                    <svg class="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 12H5m14 0-4 4m4-4-4-4" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        }
+        }
+    </div>
+</section>
