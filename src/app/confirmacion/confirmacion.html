@@ -1,0 +1,136 @@
+<section class="bg-white py-8 antialiased md:py-16">
+    <div class="mx-auto max-w-screen-xl px-4 2xl:px-0">
+        <div *ngIf="cargando" class="text-center py-12">
+            <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            <p class="mt-4 text-gray-600">Cargando información de la orden...</p>
+        </div>
+    </div>
+
+    <div *ngIf="error && !cargando" class="max-w-2xl mx-auto">
+        <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 border border-red-200" role="alert">
+            <span class="font-medium">Error:</span> {{ error }}
+        </div>
+        <button (click)="volverInicio()"
+            class="flex items-center justify-center w-full px-5 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300">
+            Volver al inicio
+        </button>
+    </div>
+
+    <div *ngIf="factura && !cargando" class="max-w-4xl mx-auto">
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-4">
+                <svg class="w-12 h-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">¡Pedido Realizado con Éxito!</h1>
+            <p class="text-lg text-gray-600">Gracias por tu compra. Tu pedido ha sido procesado correctamente.</p>
+        </div>
+    </div>
+
+    <div class="grid gap-6 md:grid-cols-2 mb-6">
+        <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Detalles del Pedido</h3>
+            <dl class="space-y-3">
+                <div class="flex justify-between">
+                    <dt class="text-sm font-medium text-gray-500">Número de Orden:</dt>
+                    <dd class="text-sm font-semibold text-gray-900">#{{ factura?.id }}</dd>
+                </div>
+                <div class="flex justify-between">
+                    <dt class="text-sm font-medium text-gray-500">Fecha:</dt>
+                    <dd class="text-sm text-gray-900">{{ factura?.fecha | date:'dd/MM/yyyy HH:mm' }}</dd>
+                </div>
+                <div class="flex justify-between">
+                    <dt class="text-sm font-medium text-gray-500">Cliente:</dt>
+                    <dd class="text-sm text-gray-900">{{ factura?.nombre_cliente }} {{ factura?.apellido_cliente }}</dd>
+                </div>
+                <div class="flex justify-between">
+                    <dt class="text-sm font-medium text-gray-500">Email:</dt>
+                    <dd class="text-sm text-gray-900">{{ factura?.email_cliente }}</dd>
+                </div>
+                <div class="flex justify-between">
+                    <dt class="text-sm font-medium text-gray-500">Teléfono:</dt>
+                    <dd class="text-sm text-gray-900">{{ factura?.telefono_cliente }}</dd>
+                </div>
+            </dl>
+        </div>
+
+        <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Información de Envío</h3>
+            <dl class="space-y-3">
+                <div class="flex justify-between">
+                    <dt class="text-sm font-medium text-gray-500">Dirección:</dt>
+                    <dd class="text-sm text-gray-900 text-right">{{ factura?.direccion_cliente }}</dd>
+                </div>
+                <div *ngIf="factura?.complemento_direccion" class="flex justify-between">
+                    <dt class="text-sm font-medium text-gray-500">Complemento:</dt>
+                    <dd class="text-sm text-gray-900 text-right">{{ factura?.complemento_direccion }}</dd>
+                </div>
+                <div class="flex justify-between">
+                    <dt class="text-sm font-medium text-gray-500">Ciudad:</dt>
+                    <dd class="text-sm text-gray-900 text-right">{{ factura?.ciudad_cliente }}</dd>
+                </div>
+                <div class="flex justify-between">
+                    <dt class="text-sm font-medium text-gray-500">Región:</dt>
+                    <dd class="text-sm text-gray-900 text-right">{{ factura?.region_cliente }}</dd>
+                </div>
+                <div class="flex justify-between">
+                    <dt class="text-sm font-medium text-gray-500">País:</dt>
+                    <dd class="text-sm text-gray-900 text-right">{{ factura?.pais_cliente }}</dd>
+                </div>
+            </dl>
+        </div>
+    </div>
+
+    <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm mb-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Resumen de Pago</h3>
+        <dl class="space-y-3">
+            <div class="flex justify-between">
+                <dt class="text-base text-gray-500">Subtotal:</dt>
+                <dd class="text-base text-gray-900">{{ factura?.valor_pagado | currency }}</dd>
+            </div>
+            <div class="flex justify-between">
+                <dt class="text-base text-gray-500">Envío:</dt>
+                <dd class="text-base text-gray-900">
+                    {{ factura?.precio_envio === 0 ? 'Gratis' : (factura?.precio_envio | currency) }}
+                </dd>
+            </div>
+            <div class="flex justify-between pt-3 border-t border-gray-200">
+                <dt class="text-lg font-bold text-gray-900">Total Pagado:</dt>
+                <dd class="text-lg font-bold text-green-600">{{ factura?.valor_total | currency }}</dd>
+            </div>
+            <div class="flex justify-between">
+                <dt class="text-sm text-gray-500">Método de Pago:</dt>
+                <dd class="text-sm font-medium text-gray-900">{{ factura?.metodo_pago }}</dd>
+            </div>
+        </dl>
+    </div>
+
+    <div class="p-4 mb-6 text-sm text-blue-800 rounded-lg bg-blue-50 border border-blue-200" role="alert">
+        <div class="flex items-start">
+            <svg class="flex-shrink-0 w-5 h-5 me-3 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                    d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+            </svg>
+            <div>
+                <span class="font-medium">Confirmación enviada:</span>
+                Hemos enviado un correo de confirmación a {{ factura?.email_cliente }} con los detalles de tu pedido.
+            </div>
+        </div>
+    </div>
+    <div class="flex flex-col sm:flex-row gap-4">
+        <button (click)="imprimirFactura()"
+            class="flex-1 flex items-center justify-center px-5 py-2.5 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200">
+            <svg class="w-5 h-5 me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z">
+                </path>
+            </svg>
+            Imprimir Factura
+        </button>
+        <button (click)="volverInicio()"
+            class="flex-1 flex items-center justify-center px-5 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300">
+            Volver al Inicio
+        </button>
+    </div>
+</section>

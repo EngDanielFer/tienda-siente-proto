@@ -52,7 +52,11 @@ export class CartStateService {
       ),
       update: (state, action$: Observable<ProductItemCart>) => action$.pipe(
         map((product) => this.update(state, product))
-      )
+      ),
+      clear: (state, action$: Observable<void>) =>
+        action$.pipe(
+          map(() => this.clear(state))
+        )
     },
     effects: (state) => ({
       load: () => {
@@ -105,6 +109,16 @@ export class CartStateService {
     return {
       productos,
       status: productos.length > 0 ? 'withProducts' as const : 'empty' as const
+    }
+  }
+
+  private clear(state: Signal<State>) {
+    this._storageService.clearProducts();
+
+    return {
+      productos: [],
+      status: 'empty' as const,
+      loaded: true
     }
   }
 

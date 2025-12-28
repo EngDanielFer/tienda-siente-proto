@@ -14,4 +14,12 @@ export class StorageService {
   saveProducts(products: ProductItemCart[]) : void {
     localStorage.setItem('products', JSON.stringify(products));
   }
+
+  clearProducts(): void {
+    try {
+      localStorage.removeItem('products');
+    } catch (error) {
+      console.error('Error al limpiar productos del carrito:', error);
+    }
+  }
 }

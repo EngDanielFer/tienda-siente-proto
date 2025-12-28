@@ -3,6 +3,8 @@ import { initFlowbite } from 'flowbite';
 import { CartStateService } from '../shared/data-access/cart-state.service';
 import { CurrencyPipe, NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { PaymentDataService } from '../shared/data-access/payment-data.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-payment',
@@ -16,12 +18,15 @@ export default class Payment implements AfterViewInit {
   }
 
   cartState = inject(CartStateService).state;
+  paymentDataService = inject(PaymentDataService);
+  router = inject(Router)
+
   dropdownOpen = false;
 
   paisSeleccionado = {
-    label: '+1 United States',
-    code: '+1',
-    flag: 'https://flagcdn.com/us.svg',
+    label: '+57 Colombia',
+    code: '+57',
+    flag: 'https://flagcdn.com/co.svg',
   };
 
   paisesCodigos = [
@@ -91,5 +96,31 @@ export default class Payment implements AfterViewInit {
       });
       return;
     }
+
+    if (!this.valorPaisSelec || !this.valorRegionSelec || !this.valorCiudadSelec) {
+      alert('Por favor, completa todos los campos de ubicación');
+      return;
+    }
+
+    const paisSeleccionado = this.paises.find(p => p.value === this.valorPaisSelec);
+    const regionSeleccionada = this.regiones.find(r => r.value === this.valorRegionSelec);
+    const ciudadSeleccionada = this.ciudades.find(c => c.value === this.valorCiudadSelec);
+
+    const datosCliente = {
+      nombre_cliente: form.value.nombre.trim(),
+      apellido_cliente: form.value.apellidos.trim(),
+      email_cliente: form.value.email.trim(),
+      telefono_cliente: this.paisSeleccionado.code + form.value.telefono,
+      pais_cliente: paisSeleccionado?.label || this.valorPaisSelec,
+      region_cliente: regionSeleccionada?.label || this.valorRegionSelec,
+      ciudad_cliente: ciudadSeleccionada?.label || this.valorCiudadSelec,
+      direccion_cliente: form.value.direccion.trim(),
+      complemento_direccion: form.value['complemento-direccion']?.trim() || ''
+    };
+
+    console.log('Datos del cliente a guardar:', datosCliente);
+    this.paymentDataService.setDatosCliente(datosCliente);
+
+    this.router.navigate(['/shipping']);
   }
 }

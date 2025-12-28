@@ -23,6 +23,18 @@ export const routes: Routes = [
         loadChildren: () => import('./payment/payment.routes')
     },
     {
+        path: 'shipping',
+        loadComponent: () => import('./shipping/shipping')
+    },
+    {
+        path: 'checkout',
+        loadComponent: () => import('./checkout/checkout')
+    },
+    {
+        path: 'confirmacion/:id',
+        loadComponent: () => import('./confirmacion/confirmacion')
+    },
+    {
         path: '**',
         redirectTo: ''
     }
