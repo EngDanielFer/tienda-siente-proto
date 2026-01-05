@@ -58,7 +58,17 @@ export default class Shipping implements AfterViewInit {
   ];
 
   ngOnInit() {
-    if (!this.paymentDataService.getDatosCliente()) {
+    // if (!this.paymentDataService.getDatosCliente()) {
+    //   this.router.navigate(['/payment']);
+    //   return;
+    // }
+
+    const datosCliente = this.paymentDataService.getDatosCliente();
+
+    console.log('=== SHIPPING - Datos del cliente ===', datosCliente);
+
+    if (!datosCliente) {
+      console.warn('No hay datos del cliente, redirigiendo a payment');
       this.router.navigate(['/payment']);
       return;
     }
@@ -71,9 +81,18 @@ export default class Shipping implements AfterViewInit {
 
     if (!datosCliente) return;
 
-    const esColombia = datosCliente.pais_cliente === 'Colombia' || 
-                       datosCliente.pais_cliente === 'CO' ||
-                       datosCliente.pais_cliente.toLowerCase().includes('colombia');
+    console.log('Calculando métodos de envío para país:', datosCliente.paisCliente);
+
+    const paisCliente = datosCliente.paisCliente || '';
+    const esColombia = paisCliente === 'Colombia' ||
+      paisCliente === 'CO' ||
+      (paisCliente && paisCliente.toLowerCase().includes('colombia'));
+
+    // const esColombia = datosCliente.pais_cliente === 'Colombia' ||
+    // datosCliente.pais_cliente === 'CO' ||
+    // datosCliente.pais_cliente.toLowerCase().includes('colombia');
+
+    console.log('¿Es Colombia?', esColombia);
 
     if (esColombia) {
       this.metodosEnvio = [
@@ -127,6 +146,7 @@ export default class Shipping implements AfterViewInit {
   onSeleccionarMetodo(metodo: MetodoEnvio) {
     this.metodoEnvioSeleccionado = metodo.id;
     this.costoEnvio = metodo.precio;
+    console.log('Método de envío seleccionado:', metodo);
   }
 
   onSubmit(form: NgForm) {
@@ -134,17 +154,20 @@ export default class Shipping implements AfterViewInit {
       Object.values(form.controls).forEach((control: any) => {
         control.markAsTouched();
       });
-      
+
       if (!this.metodoEnvioSeleccionado) {
         alert('Por favor, selecciona un método de envío');
       }
       return;
     }
 
-    this.paymentDataService.setDatosEnvio({
-      metodo_envio: this.metodoEnvioSeleccionado,
-      precio_envio: this.costoEnvio
-    });
+    const datosEnvio = {
+      metodoEnvio: this.metodoEnvioSeleccionado,
+      precioEnvio: this.costoEnvio
+    }
+
+    console.log('Guardando datos de envío:', datosEnvio);
+    this.paymentDataService.setDatosEnvio(datosEnvio);
 
     this.router.navigate(['/checkout']);
   }

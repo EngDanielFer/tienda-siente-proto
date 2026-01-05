@@ -1,6 +1,6 @@
 <a [routerLink]="['/productos/product', producto().id]">
     <div
-        class="w-70 min-w-55 max-w-sm h-[500px] bg-yellow-siente border border-gray-200 rounded-lg shadow-sm flex flex-col">
+        class="w-70 min-w-55 max-w-sm h-[525px] bg-yellow-siente border border-gray-200 rounded-lg shadow-sm flex flex-col">
         <picture class="flex items-center justify-center flex-shrink-0">
             <img class="rounded-t-lg h-60 w-full mx-2 my-2 bg-white object-contain object-center" [src]="imagenSrc()"
                 alt="">
@@ -15,12 +15,15 @@
                 {{ producto().descripcion_producto }}
             </p>
             <p class="mb-3 text-lg font-semibold">
-                {{ producto().precio_por_mayor | currency }}
+                {{ producto().precio_detal | currency }}
             </p>
+            <p>
+                {{ producto().stock_producto }} unidades disponibles
+            </p> 
             <div class="flex justify-end my-4 mt-auto">
                 <button
-                    class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
-                    (click)="add($event)">
+                    class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 disabled:opacity-50"
+                    (click)="add($event)" [disabled]="producto().stock_producto == 0">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                         fill="currentColor" class="icon icon-tabler icons-tabler-filled icon-tabler-shopping-cart">
                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />

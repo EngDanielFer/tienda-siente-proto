@@ -24,6 +24,7 @@ export default class Checkout implements AfterViewInit {
   router = inject(Router);
 
   metodoPagoSeleccionado: string = '';
+  // tipoPrecioSeleccionado: 'mayor' | 'detal' = 'detal';
   procesando: boolean = false;
   error: string = '';
 
@@ -60,6 +61,19 @@ export default class Checkout implements AfterViewInit {
     }
   ];
 
+  // tiposPrecio = [
+  //   {
+  //     id: 'detal',
+  //     nombre: 'Precio Detal',
+  //     descripcion: 'Precio unitario para venta al público'
+  //   },
+  //   {
+  //     id: 'mayor',
+  //     nombre: 'Precio por Mayor',
+  //     descripcion: 'Precio especial para compras al por mayor'
+  //   }
+  // ];
+
   datosCliente: any = null;
   datosEnvio: any = null;
 
@@ -78,6 +92,11 @@ export default class Checkout implements AfterViewInit {
     this.error = '';
   }
 
+  // onSeleccionarTipoPrecio(tipo: 'mayor' | 'detal') {
+  //   this.tipoPrecioSeleccionado = tipo;
+  //   this.error = '';
+  // }
+
   async onSubmit(form: NgForm) {
     if (form.invalid || !this.metodoPagoSeleccionado) {
       Object.values(form.controls).forEach((control: any) => {
@@ -95,28 +114,70 @@ export default class Checkout implements AfterViewInit {
       return;
     }
 
+    console.log('=== DEBUG CHECKOUT ===');
+    console.log('Datos Cliente:', this.datosCliente);
+    console.log('Datos Envío:', this.datosEnvio);
+    console.log('Productos en carrito:', this.cartState.productos());
+    console.log('Método de pago seleccionado:', this.metodoPagoSeleccionado);
+    console.log('Tipo de precio seleccionado: detal');
+
+    if (!this.datosCliente ||
+      !this.datosCliente.nombreCliente ||
+      !this.datosCliente.apellidoCliente ||
+      !this.datosCliente.emailCliente) {
+      this.error = 'Faltan datos del cliente. Por favor, vuelve al formulario de pago.';
+      console.error('Datos del cliente incompletos:', this.datosCliente);
+      return;
+    }
+
+    if (!this.datosEnvio ||
+      (this.datosEnvio.precioEnvio === undefined &&
+        this.datosEnvio.precio_envio === undefined)) {
+      this.error = 'Faltan datos de envío. Por favor, selecciona un método de envío.';
+      console.error('Datos de envío incompletos:', this.datosEnvio);
+      this.router.navigate(['/shipping']);
+      return;
+    }
+
     this.procesando = true;
     this.error = '';
 
     try {
       const productos = this.cartState.productos().map(item => ({
-        id_producto: item.producto.id,
-        cantidad_producto: item.cantidad
+        idProducto: item.producto.id,
+        cantidadProducto: item.cantidad
       }));
 
+      const precioEnvio = this.datosEnvio.precioEnvio ?? this.datosEnvio.precio_envio ?? 0;
+
       const facturaRequest = {
-        datosCliente: this.datosCliente,
+        datosCliente: {
+          nombreCliente: this.datosCliente.nombreCliente,
+          apellidoCliente: this.datosCliente.apellidoCliente || '',
+          emailCliente: this.datosCliente.emailCliente,
+          telefonoCliente: this.datosCliente.telefonoCliente,
+          paisCliente: this.datosCliente.paisCliente,
+          regionCliente: this.datosCliente.regionCliente,
+          ciudadCliente: this.datosCliente.ciudadCliente,
+          direccionCliente: this.datosCliente.direccionCliente,
+          complementoDireccion: this.datosCliente.complementoDireccion || ''
+        },
         productos: productos,
-        precio_envio: this.datosEnvio.precio_envio,
-        metodo_pago: this.obtenerNombreMetodoPago()
+        precioEnvio: precioEnvio,
+        metodoPago: this.obtenerNombreMetodoPago(),
+        // tipoPrecio: this.tipoPrecioSeleccionado
       }
 
+      console.log('Factura Request (antes de enviar):', JSON.stringify(facturaRequest));
+
       const response = await this.facturaService.crearFactura(facturaRequest);
+
+      console.log('Respuesta del servidor:', response);
 
       this.cartState.clear();
       this.paymentDataService.limpiarDatos();
 
-      this.router.navigate(['/confirmacion', response.id_factura]);
+      this.router.navigate(['/confirmacion', response.idFactura]);
     } catch (error: any) {
       console.error('Error al procesar pago:', error);
       this.error = error.message || 'Error al procesar el pago. Por favor, intenta nuevamente.';
@@ -137,7 +198,26 @@ export default class Checkout implements AfterViewInit {
     return this.metodosPago.find(m => m.id === this.metodoPagoSeleccionado);
   }
 
+  // obtenerTipoPrecioSeleccionado() {
+  //   return this.tiposPrecio.find(t => t.id === this.tipoPrecioSeleccionado);
+  // }
+
   obtenerTotal(): number {
-    return this.cartState.precio() + (this.datosEnvio?.precio_envio || 0);
+    const precioEnvio = this.datosEnvio?.precioEnvio ?? this.datosEnvio?.precio_envio ?? 0;
+    return this.cartState.precio() + precioEnvio;
+
   }
+
+  // calcularPrecioMayor(): number {
+  //   return this.cartState.productos().reduce((total, item) => {
+  //     const precioMayor = item.producto.precio_por_mayor || item.producto.precio_detal;
+  //     return total + (precioMayor * item.cantidad);
+  //   }, 0);
+  // }
+
+  // obtenerPrecioProducto(producto: any): number {
+  //   return this.tipoPrecioSeleccionado === 'mayor'
+  //     ? (producto.producto.precio_por_mayor || producto.producto.precio_detal)
+  //     : producto.producto.precio_detal;
+  // }
 }

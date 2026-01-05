@@ -38,7 +38,7 @@ export class CartStateService {
       cantidad: () => state().productos.reduce((acc, producto) => acc + producto.cantidad, 0),
       precio: () => {
         return state().productos.reduce(
-          (acc, producto) => acc + producto.producto.precio_por_mayor * producto.cantidad, 0
+          (acc, producto) => acc + producto.producto.precio_detal * producto.cantidad, 0
         );
       }
     }),

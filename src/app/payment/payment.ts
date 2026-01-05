@@ -89,7 +89,14 @@ export default class Payment implements AfterViewInit {
     this.ciudadesFiltradas = this.ciudades.filter(c => c.region === region);
   }
 
-  onSubmit(form: any) {
+  async onSubmit(form: any) {
+    console.log('=== PAYMENT FORM SUBMIT ===');
+    console.log('Form valid:', form.valid);
+    console.log('Form values:', form.value);
+    console.log('País seleccionado:', this.valorPaisSelec);
+    console.log('Región seleccionada:', this.valorRegionSelec);
+    console.log('Ciudad seleccionada:', this.valorCiudadSelec);
+
     if (form.invalid) {
       Object.values(form.controls).forEach((control: any) => {
         control.markAsTouched();
@@ -106,19 +113,40 @@ export default class Payment implements AfterViewInit {
     const regionSeleccionada = this.regiones.find(r => r.value === this.valorRegionSelec);
     const ciudadSeleccionada = this.ciudades.find(c => c.value === this.valorCiudadSelec);
 
+    const telefonoCompleto = this.paisSeleccionado.code + (form.value.telefono || '');
+
     const datosCliente = {
-      nombre_cliente: form.value.nombre.trim(),
-      apellido_cliente: form.value.apellidos.trim(),
-      email_cliente: form.value.email.trim(),
-      telefono_cliente: this.paisSeleccionado.code + form.value.telefono,
-      pais_cliente: paisSeleccionado?.label || this.valorPaisSelec,
-      region_cliente: regionSeleccionada?.label || this.valorRegionSelec,
-      ciudad_cliente: ciudadSeleccionada?.label || this.valorCiudadSelec,
-      direccion_cliente: form.value.direccion.trim(),
-      complemento_direccion: form.value['complemento-direccion']?.trim() || ''
+      // nombre_cliente: form.value.nombre.trim(),
+      // apellido_cliente: form.value.apellidos.trim(),
+      // email_cliente: form.value.email.trim(),
+      // telefono_cliente: this.paisSeleccionado.code + form.value.telefono,
+      // pais_cliente: paisSeleccionado?.label || this.valorPaisSelec,
+      // region_cliente: regionSeleccionada?.label || this.valorRegionSelec,
+      // ciudad_cliente: ciudadSeleccionada?.label || this.valorCiudadSelec,
+      // direccion_cliente: form.value.direccion.trim(),
+      // complemento_direccion: form.value['complemento-direccion']?.trim() || ''
+      nombreCliente: (form.value.nombre || '').trim(),
+      apellidoCliente: (form.value.apellidos || form.value.apellido || '').trim(),
+      emailCliente: (form.value.email || '').trim(),
+      telefonoCliente: telefonoCompleto,
+      paisCliente: paisSeleccionado?.label || this.valorPaisSelec,
+      regionCliente: regionSeleccionada?.label || this.valorRegionSelec,
+      ciudadCliente: ciudadSeleccionada?.label || this.valorCiudadSelec,
+      direccionCliente: (form.value.direccion || '').trim(),
+      complementoDireccion: (form.value['complemento-direccion'] || form.value.complemento || '').trim()
     };
 
     console.log('Datos del cliente a guardar:', datosCliente);
+
+    if (!datosCliente.nombreCliente || !datosCliente.apellidoCliente ||
+      !datosCliente.emailCliente || !datosCliente.telefonoCliente ||
+      !datosCliente.direccionCliente) {
+      alert('Por favor, completa todos los campos requeridos');
+      console.error('Faltan campos requeridos:', datosCliente);
+      return;
+    }
+
+    
     this.paymentDataService.setDatosCliente(datosCliente);
 
     this.router.navigate(['/shipping']);

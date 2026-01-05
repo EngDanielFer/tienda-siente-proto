@@ -39,6 +39,7 @@ export default class Confirmacion implements OnInit, AfterViewInit {
   async cargarFactura(id: number): Promise<void> {
     try {
       this.factura = await this.facturaService.obtenerFactura(id);
+      console.log('Factura cargada:', this.factura);
       this.cargando = false;
     } catch (error: any) {
       this.error = 'Error al cargar la información de la factura';

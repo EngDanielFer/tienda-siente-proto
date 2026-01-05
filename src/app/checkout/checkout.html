@@ -48,21 +48,21 @@
                     </h3>
                     <div class="space-y-2 text-sm">
                         <p><span class="font-medium text-gray-700">Cliente:</span>
-                            {{ datosCliente.nombre_cliente }} {{ datosCliente.apellido_cliente }}</p>
+                            {{ datosCliente.nombreCliente }} {{ datosCliente.apellidoCliente }}</p>
                         <p><span class="font-medium text-gray-700">Email:</span>
-                            {{ datosCliente.email_cliente }}</p>
+                            {{ datosCliente.emailCliente }}</p>
                         <p><span class="font-medium text-gray-700">Teléfono:</span>
-                            {{ datosCliente.telefono_cliente }}</p>
+                            {{ datosCliente.telefonoCliente }}</p>
                         <p><span class="font-medium text-gray-700">Dirección:</span>
-                            {{ datosCliente.direccion_cliente }}</p>
-                        <p *ngIf="datosCliente.complemento_direccion">
+                            {{ datosCliente.direccionCliente }}</p>
+                        <p *ngIf="datosCliente.complementoDireccion">
                             <span class="font-medium text-gray-700">Complemento:</span>
-                            {{ datosCliente.complemento_direccion }}
+                            {{ datosCliente.complementoDireccion }}
                         </p>
                         <p><span class="font-medium text-gray-700">Ciudad:</span>
-                            {{ datosCliente.ciudad_cliente }}, {{ datosCliente.region_cliente }}</p>
+                            {{ datosCliente.ciudadCliente }}, {{ datosCliente.regionCliente }}</p>
                         <p><span class="font-medium text-gray-700">País:</span>
-                            {{ datosCliente.pais_cliente }}</p>
+                            {{ datosCliente.paisCliente }}</p>
                     </div>
                 </div>
 
@@ -156,7 +156,7 @@
                                 <p class="text-gray-500">Cantidad: {{ producto.cantidad }}</p>
                             </div>
                             <p class="font-medium text-gray-900">
-                                {{ (producto.producto.precio_por_mayor) | currency }}
+                                {{ (producto.producto.precio_detal) | currency }}
                             </p>
                         </div>
                     </div>
@@ -172,7 +172,7 @@
                         <dl class="flex items-center justify-between gap-4">
                             <dt class="text-base font-normal text-gray-500">Envío</dt>
                             <dd class="text-base font-medium text-gray-900">
-                                {{ datosEnvio.precio_envio === 0 ? 'Gratis' : (datosEnvio.precio_envio | currency) }}
+                                {{ datosEnvio.precioEnvio === 0 ? 'Gratis' : (datosEnvio.precioEnvio | currency) }}
                             </dd>
                         </dl>
                     </div>

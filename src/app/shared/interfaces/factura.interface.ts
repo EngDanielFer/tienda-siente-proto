@@ -1,59 +1,61 @@
 export interface FacturaInterface {
     id: number;
     fecha: Date;
-    nombre_cliente: string;
-    apellido_cliente: string;
-    email_cliente: string;
-    direccion_cliente: string;
-    complemento_direccion?: string;
-    telefono_cliente: string;
-    pais_cliente: string;
-    region_cliente: string;
-    ciudad_cliente: string;
-    valor_pagado: number;
-    precio_envio: number;
-    valor_total: number;
-    metodo_pago: string;
+    nombreCliente: string;
+    apellidoCliente: string;
+    emailCliente: string;
+    direccionCliente: string;
+    complementoDireccion?: string;
+    telefonoCliente: string;
+    paisCliente: string;
+    regionCliente: string;
+    ciudadCliente: string;
+    valorPagado: number;
+    precioEnvio: number;
+    valorTotal: number;
+    metodoPago: string;
+    detalle: FacturaDetalle[];
 }
 
 export interface ProductoFactura {
-    id_producto: number;
-    cantidad_producto: number;
-    nombre_producto?: string;
-    precio_unitario?: number;
+    idProducto: number;
+    cantidadProducto: number;
+    nombreProducto?: string;
+    precioUnitario?: number;
 }
 
 export interface DatosCliente {
-    nombre_cliente: string;
-    apellido_cliente: string;
-    email_cliente: string;
-    direccion_cliente: string;
-    complemento_direccion?: string;
-    telefono_cliente: string;
-    pais_cliente: string;
-    region_cliente: string;
-    ciudad_cliente: string;
+    nombreCliente: string;
+    apellidoCliente: string;
+    emailCliente: string;
+    direccionCliente: string;
+    complementoDireccion?: string;
+    telefonoCliente: string;
+    paisCliente: string;
+    regionCliente: string;
+    ciudadCliente: string;
 }
 
 export interface FacturaRequest {
     datosCliente: DatosCliente;
     productos: ProductoFactura[];
-    precio_envio: number;
-    metodo_pago: string;
+    precioEnvio: number;
+    metodoPago: string;
+    // tipoPrecio: 'mayor' | 'detal';
 }
 
 export interface FacturaResponse {
-    id_factura: number;
+    idFactura: number;
     mensaje: string;
-    valor_total: number;
-    valor_pagado: number;
-    precio_envio: number;
+    valorTotal: number;
+    valorPagado: number;
+    precioEnvio: number;
 }
 
 export interface FacturaDetalle {
-  id_factura: number;
-  id_producto: number;
-  cantidad_producto: number;
-  precio_unitario: number;
+  idFactura: number;
+  idProducto: number;
+  cantidadProducto: number;
+  precioUnitario: number;
   subtotal: number;
 }

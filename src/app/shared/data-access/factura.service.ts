@@ -33,22 +33,73 @@ export class FacturaService {
   async crearFactura(facturaData: FacturaRequest): Promise<FacturaResponse> {
 
     try {
+
+      console.log('=== SERVICIO FACTURA ===');
+      console.log('Datos recibidos (camelCase):', facturaData);
+
+      if (!facturaData.datosCliente) {
+        throw new Error('Los datos del cliente son requeridos');
+      }
+
+      if (facturaData.precioEnvio === undefined || facturaData.precioEnvio === null) {
+        throw new Error('El precio de envío es requerido');
+      }
+
+      const tipoPrecio = 'detal';
+
+
+      const payload = {
+        datosCliente: {
+          nombre_cliente: facturaData.datosCliente.nombreCliente,
+          apellido_cliente: facturaData.datosCliente.apellidoCliente,
+          email_cliente: facturaData.datosCliente.emailCliente,
+          direccion_cliente: facturaData.datosCliente.direccionCliente,
+          complemento_direccion: facturaData.datosCliente.complementoDireccion || '',
+          telefono_cliente: facturaData.datosCliente.telefonoCliente,
+          pais_cliente: facturaData.datosCliente.paisCliente,
+          region_cliente: facturaData.datosCliente.regionCliente,
+          ciudad_cliente: facturaData.datosCliente.ciudadCliente
+        },
+        productos: facturaData.productos.map(p => ({
+          id_producto: p.idProducto,
+          cantidad_producto: p.cantidadProducto
+        })),
+        precio_envio: Number(facturaData.precioEnvio),
+        metodo_pago: facturaData.metodoPago,
+        tipo_precio: tipoPrecio
+      };
+
+      console.log('Payload a enviar (snake_case):', payload);
+      console.log('Payload JSON:', JSON.stringify(payload, null, 2));
+
       const response = await fetch(this.apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(facturaData)
+        body: JSON.stringify(payload)
       });
 
       if (!response.ok) {
         const errorData = await response.json();
+        console.error('Error del backend:', errorData);
         throw new Error(errorData.mensaje || 'Error al crear la factura');
       }
 
-      const data: FacturaResponse = await response.json();
-      console.log('Factura creada exitosamente:', data);
-      return data;
+      const data = await response.json();
+      console.log('Respuesta del backend:', data);
+
+      const facturaResponse: FacturaResponse = {
+        idFactura: data.id_factura,
+        mensaje: data.mensaje,
+        valorTotal: data.valor_total,
+        valorPagado: data.valor_pagado,
+        precioEnvio: data.precio_envio
+      };
+
+      return facturaResponse;
+      // console.log('Factura creada exitosamente:', data);
+      // return data;
     } catch (error: any) {
       console.error('Error al crear factura:', error);
       throw new Error(error.message || 'Error al procesar la factura');
@@ -64,7 +115,28 @@ export class FacturaService {
       }
 
       const data: FacturaInterface = await response.json();
-      return data;
+      console.log('Datos recibidos del backend:', data);
+
+      const factura: FacturaInterface = {
+        id: data.id,
+        fecha: new Date(data.fecha),
+        nombreCliente: data.nombreCliente,
+        apellidoCliente: data.apellidoCliente,
+        emailCliente: data.emailCliente,
+        direccionCliente: data.direccionCliente,
+        complementoDireccion: data.complementoDireccion,
+        telefonoCliente: data.telefonoCliente,
+        paisCliente: data.paisCliente,
+        regionCliente: data.regionCliente,
+        ciudadCliente: data.ciudadCliente,
+        valorPagado: data.valorPagado,
+        precioEnvio: data.precioEnvio,
+        valorTotal: data.valorTotal,
+        metodoPago: data.metodoPago,
+        detalle: data.detalle || []
+      };
+
+      return factura;
     } catch (error: any) {
       console.error('Error al obtener factura:', error);
       throw new Error(error.message || 'Error al obtener la factura');
@@ -79,8 +151,26 @@ export class FacturaService {
         throw new Error('Error al obtener facturas');
       }
 
-      const data: FacturaInterface[] = await response.json();
-      return data;
+      const data: any[] = await response.json();
+
+      return data.map(item => ({
+        id: item.id,
+        fecha: new Date(item.fecha),
+        nombreCliente: item.nombreCliente,
+        apellidoCliente: item.apellidoCliente,
+        emailCliente: item.emailCliente,
+        direccionCliente: item.direccionCliente,
+        complementoDireccion: item.complementoDireccion,
+        telefonoCliente: item.telefonoCliente,
+        paisCliente: item.paisCliente,
+        regionCliente: item.regionCliente,
+        ciudadCliente: item.ciudadCliente,
+        valorPagado: item.valorPagado,
+        precioEnvio: item.precioEnvio,
+        valorTotal: item.valorTotal,
+        metodoPago: item.metodoPago,
+        detalle: item.detalle || []
+      }));
     } catch (error: any) {
       console.error('Error al obtener facturas:', error);
       throw new Error(error.message || 'Error al obtener las facturas');
